@@ -8,9 +8,12 @@ import {
 } from "../../ui/form";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { RefObject, useImperativeHandle } from "react";
+import { FormFunction, FormModel, InforFunction } from "./DeveloperModels";
+import { FaceImage } from "@/assets";
 
 const language = z.object({
   name: z.string(),
@@ -53,7 +56,7 @@ const project = z.object({
     .max(100, {
       message: "This field must be below 100 characters",
     }),
-  teckstack: z
+  techstack: z
     .string()
     .min(5, {
       message: "This field must be at least 5 characters",
@@ -79,7 +82,7 @@ const project = z.object({
     }),
 });
 
-const formSchema = z.object({
+export const formSchema = z.object({
   email: z
     .string()
     .min(2, {
@@ -122,7 +125,12 @@ const formSchema = z.object({
   projects: z.array(project),
 });
 
-export default function DeveloperFormContent() {
+interface Props {
+  formRef: RefObject<FormFunction>;
+  infoRef: RefObject<InforFunction>;
+}
+
+export default function DeveloperFormContent({ formRef, infoRef }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     shouldFocusError: true,
@@ -131,7 +139,7 @@ export default function DeveloperFormContent() {
       username: "ducminhsw",
       firstname: "Minh",
       lastname: "Nguyen",
-      avatarlink: "",
+      avatarlink: FaceImage,
       objective: "",
       mainSkill: {},
       otherSkills: [],
@@ -140,23 +148,31 @@ export default function DeveloperFormContent() {
     },
   });
 
-  const onSubmitForm = (values: z.infer<typeof formSchema>) => {
-    console.log("values", values);
+  const onSubmitForm = (type: number) => {
+    return function (values: z.infer<typeof formSchema>) {
+      if (type === 0 || type === 1) console.log(values);
+    };
   };
 
-  const onCancelForm = (
-    form: UseFormReturn<z.infer<typeof formSchema>, any, undefined>
-  ) => {
+  const onSetPreview = () => {
+    infoRef.current?.handleSetPreview();
+  };
+
+  const onCancelForm = () => {
     form.reset();
   };
+
+  useImperativeHandle(formRef, () => ({
+    getFormValues() {
+      return form.getValues() as FormModel;
+    },
+  }));
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmitForm)}
-        onReset={() => {
-          onCancelForm(form);
-        }}
+        onSubmit={form.handleSubmit(onSubmitForm(1))}
+        onReset={onCancelForm}
         className="w-full space-y-6 mt-3"
       >
         <FormField
@@ -381,7 +397,7 @@ export default function DeveloperFormContent() {
               />
               <FormField
                 control={form.control}
-                name={`projects.${index}.teckstack`}
+                name={`projects.${index}.techstack`}
                 render={({ field }) => (
                   <FormItem className="w-2/5">
                     <FormLabel>Objective</FormLabel>
@@ -437,7 +453,8 @@ export default function DeveloperFormContent() {
           Reset
         </Button>
         <Button
-          type="reset"
+          type="button"
+          onClick={onSetPreview}
           className="bg-blue-400 text-white mr-[20px] border hover:bg-slate-100"
         >
           Preview

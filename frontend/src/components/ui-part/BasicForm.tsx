@@ -53,7 +53,7 @@ const project = z.object({
     .max(100, {
       message: "This field must be below 100 characters",
     }),
-  teckstack: z
+  techstack: z
     .string()
     .min(5, {
       message: "This field must be at least 5 characters",
@@ -381,7 +381,7 @@ export function InputForm() {
               />
               <FormField
                 control={form.control}
-                name={`projects.${index}.teckstack`}
+                name={`projects.${index}.techstack`}
                 render={({ field }) => (
                   <FormItem className="w-2/5">
                     <FormLabel>Objective</FormLabel>
