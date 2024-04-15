@@ -27,7 +27,7 @@ export default function DeveloperInformation({
   infoRef,
 }: Props) {
   const [formFields, setFormFields] = useState<FormModel>();
-  
+
   const handleSetPreview = () => {
     const values = formRef.current?.getFormValues() || ({} as FormModel);
     setFormFields(values);
@@ -43,14 +43,15 @@ export default function DeveloperInformation({
 
   return (
     <Tabs
-      defaultValue="cardview"
+      defaultValue="overview"
       className="max-h-[750px] overflow-auto w-[300px]"
     >
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="cardview">Card View</TabsTrigger>
-        <TabsTrigger value="detailview">Detail View</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="experience">Experience</TabsTrigger>
+        <TabsTrigger value="techstack">Technology</TabsTrigger>
       </TabsList>
-      <TabsContent value="cardview" className="w-full">
+      <TabsContent value="overview" className="w-full">
         <Card className="w-[300px] hover:cursor-pointer">
           <CardHeader>
             <CardTitle>
@@ -77,7 +78,7 @@ export default function DeveloperInformation({
           </CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="detailview" className="w-full">
+      <TabsContent value="experience" className="w-full">
         <Card className="w-[300px] hover:cursor-pointer">
           <CardHeader>
             <CardTitle>Details</CardTitle>
@@ -86,38 +87,48 @@ export default function DeveloperInformation({
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col justify-center">
-            <CardTitle className="text-lg">Fullstack developer</CardTitle>
-            <ul className="list-disc">
-              {formFields?.projects.map((project, index) => {
-                return (
-                  <li key={index} className="text-sm">
-                    {project.duration}
-                    {project.name}
-                    {project.purpose}
-                    {project.techstack}
-                  </li>
-                );
-              })}
-            </ul>
+            <CardTitle className="text-lg">Company's Name</CardTitle>
+            <CardDescription>Job Role</CardDescription>
+            {formFields?.projects.map((project, index) => {
+              return (
+                <div key={index} className="text-sm">
+                  <ul className="list-disc list-inside">
+                    <li className="list-item">
+                      <span className="font-semibold">Duration:</span>{" "}
+                      {project.duration}
+                    </li>
+                    <li className="list-item">
+                      <span className="font-semibold">Project Name:</span>{" "}
+                      {project.name}
+                    </li>
+                    <li className="list-item">
+                      <span className="font-semibold">Purpose:</span>{" "}
+                      {project.purpose}
+                    </li>
+                    <li className="list-item">
+                      <span className="font-semibold">Techstack:</span>{" "}
+                      {project.techstack}
+                    </li>
+                  </ul>
+                </div>
+              );
+            })}
           </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="techstack" className="w-full">
+        <Card className="w-[300px] hover:cursor-pointer">
+          <CardHeader>
+            <CardTitle>Technology</CardTitle>
+            <CardDescription>About my technical knowledge</CardDescription>
+          </CardHeader>
           <CardContent className="flex flex-col justify-center">
-            <CardTitle className="text-lg">Fullstack developer</CardTitle>
-            <ul className="list-disc">
-              {formFields?.otherSkills.map((skill, index) => {
-                return (
-                  <li key={index} className="text-sm">
-                    {skill.name} {skill.level}
-                  </li>
-                );
-              })}
-            </ul>
+            <CardTitle className="text-lg">Programming Language</CardTitle>
+            <CardTitle className="text-lg">Version Controll tools</CardTitle>
+            <CardTitle className="text-lg">Side Skills</CardTitle>
+            <CardTitle className="text-lg">Interest</CardTitle>
           </CardContent>
-          <CardFooter className="flex-col items-end">
-            <CardDescription className="text-right">{mainRole}</CardDescription>
-            <CardDescription className="text-right">
-              Used to work at {mainWorkplace}
-            </CardDescription>
-          </CardFooter>
+          <CardFooter className="flex-col items-end"></CardFooter>
         </Card>
       </TabsContent>
     </Tabs>

@@ -173,7 +173,7 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
       <form
         onSubmit={form.handleSubmit(onSubmitForm(1))}
         onReset={onCancelForm}
-        className="w-full space-y-6 mt-3"
+        className="w-[calc(100%-40px)] space-y-6 mt-3"
       >
         <FormField
           control={form.control}

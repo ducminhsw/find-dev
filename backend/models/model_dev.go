@@ -122,6 +122,7 @@ func (dc DeveloperModel) GetCollection() *mongo.Collection {
 	return dc.Coll
 }
 
+// I need to add context to this function, not just plain logic params
 func (dc DeveloperModel) Exists(email string) (bool, error) {
 	var d *Developer
 	coll := dc.Coll

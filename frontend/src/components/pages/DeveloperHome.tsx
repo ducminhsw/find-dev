@@ -5,6 +5,7 @@ import DeveloperNavbar from "../organisms/developer/DeveloperNavbar";
 import DeveloperTemplate from "../templates/DeveloperTemplate";
 import {
   FormFunction,
+  FormModel,
   InforFunction,
 } from "../organisms/developer/DeveloperModels";
 import { FaceImage } from "@/assets";
@@ -15,7 +16,7 @@ export default function DeveloperHome() {
   const formRef = useRef<FormFunction>(null);
   const infoRef = useRef<InforFunction>(null);
 
-  const defaultFormValues = useMemo(
+  const defaultFormValues: FormModel = useMemo(
     () => ({
       email: "ducminhsw721@gmail.com",
       username: "ducminhsw",
@@ -23,10 +24,32 @@ export default function DeveloperHome() {
       lastname: "Nguyen",
       avatarlink: FaceImage,
       objective: "",
-      mainSkill: {},
-      otherSkills: [],
-      experience: [],
-      projects: [],
+      mainSkill: {
+        name: "Javascript",
+        level: "Senior",
+      },
+      otherSkills: [
+        {
+          name: "Golang",
+          level: "Junior",
+        },
+      ],
+      experience: [
+        {
+          company: "FPT Software",
+          work: "ReactJS Developer",
+          years: 2,
+        },
+      ],
+      projects: [
+        {
+          duration: "2023-01-01",
+          name: "Streaming media web application",
+          purpose:
+            "Trying to create a new streamming app with better resolution of the output video with lower price.",
+          techstack: "Golang, NodeJS, ReactJS, MongoDB, DynamoDB, Cassandra",
+        },
+      ],
     }),
     []
   );

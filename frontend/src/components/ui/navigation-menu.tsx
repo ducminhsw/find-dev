@@ -45,7 +45,7 @@ const navigationMenuTriggerStyle = cva(
 );
 
 const navigationMenuStyle = cva(
-  "group inline-flex h-10 w-[160fapx] items-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:text-black hover:bg-slate-300/50 hover:cursor-pointer hover:text-accent-foreground focus:text-black focus:bg-accent focus:outline-none"
+  "group inline-flex h-10 w-[160px] items-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:text-black hover:bg-slate-300/50 hover:cursor-pointer hover:text-accent-foreground focus:text-black focus:bg-accent focus:outline-none"
 );
 
 const NavigationMenuTrigger = React.forwardRef<

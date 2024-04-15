@@ -77,13 +77,15 @@ func createClient() (*mongo.Client, error) {
 	}
 	uri := os.Getenv("MONGO_URI")
 	if uri == "" {
-		return nil, errors.New("must be provided")
+		return nil, errors.New("mongo uri must be provided")
 	}
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	opts := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
 		return nil, errors.New("no connection found")
 	}
 
+	// sending a ping to verify the connection
 	var result bson.M
 	err = client.Database("FindDevDB").RunCommand(
 		context.TODO(),
