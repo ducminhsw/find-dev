@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+
 import DeveloperFormContent from "../organisms/developer/DeveloperFormContent";
 import DeveloperInformation from "../organisms/developer/DeveloperInformation";
 import DeveloperNavbar from "../organisms/developer/DeveloperNavbar";
@@ -24,20 +25,24 @@ export default function DeveloperHome() {
       lastname: "Nguyen",
       avatarlink: FaceImage,
       objective: "",
-      mainSkill: {
-        name: "Javascript",
-        level: "Senior",
-      },
-      otherSkills: [
+      languages: [
         {
           name: "Golang",
           level: "Junior",
         },
       ],
+      tools: ["Github", "Azure", "Jira", "Vercel", "AWS"],
+      interests: ["Solving Algorithm", "Start SAAS project"],
       experience: [
         {
           company: "FPT Software",
-          work: "ReactJS Developer",
+          role: "Frontend Engineer",
+          work: {
+            duration: "01/2023",
+            name: "Genius",
+            purpose: "Create UI/UX based on client design",
+            techstack: "React, HTML, styled-component",
+          },
           years: 2,
         },
       ],
@@ -54,19 +59,26 @@ export default function DeveloperHome() {
     []
   );
 
-  const navbar = (
-    <DeveloperNavbar navline={navline} onChangeLine={setNavline} />
-  );
-  const content = <DeveloperFormContent formRef={formRef} infoRef={infoRef} />;
-  const addition = (
-    <DeveloperInformation
-      defaultFormValues={defaultFormValues}
-      mainRole={"Fullstack Developer"}
-      mainWorkplace={"FPT Software"}
-      formRef={formRef}
-      infoRef={infoRef}
-      {...formRef.current?.getFormValues()}
-    />
+  const navbar = useMemo(function () {
+    return <DeveloperNavbar navline={navline} onChangeLine={setNavline} />;
+  }, [navline]);
+
+  const content = useMemo(function () {
+    return <DeveloperFormContent defaultFormValues={defaultFormValues} formRef={formRef} infoRef={infoRef} />;
+  }, []);
+
+  const addition = useMemo(
+    function () {
+      return (
+        <DeveloperInformation
+          defaultFormValues={defaultFormValues}
+          formRef={formRef}
+          infoRef={infoRef}
+          {...formRef.current?.getFormValues()}
+        />
+      );
+    },
+    [defaultFormValues]
   );
   return (
     <DeveloperTemplate navbar={navbar} content={content} addition={addition} />

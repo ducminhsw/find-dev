@@ -1,3 +1,5 @@
+import { RefObject, useEffect, useImperativeHandle, useState } from "react";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -8,21 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RefObject, useEffect, useImperativeHandle, useState } from "react";
 import { FormFunction, FormModel, InforFunction } from "./DeveloperModels";
 
 interface Props {
   defaultFormValues: any;
-  mainRole: string;
-  mainWorkplace: string;
   formRef: RefObject<FormFunction>;
   infoRef: RefObject<InforFunction>;
 }
 
 export default function DeveloperInformation({
   defaultFormValues,
-  mainRole,
-  mainWorkplace,
   formRef,
   infoRef,
 }: Props) {
@@ -58,7 +55,7 @@ export default function DeveloperInformation({
               {formFields?.firstname} {formFields?.lastname}
             </CardTitle>
             <CardDescription>
-              {formFields?.mainSkill.level} {formFields?.mainSkill.name}{" "}
+              {formFields?.languages[0].level} {formFields?.languages[0].name}{" "}
               Developer
             </CardDescription>
           </CardHeader>
@@ -71,9 +68,11 @@ export default function DeveloperInformation({
             </Avatar>
           </CardContent>
           <CardFooter className="flex-col items-end">
-            <CardDescription className="text-right">{mainRole}</CardDescription>
             <CardDescription className="text-right">
-              Used to work at {mainWorkplace}
+              {formFields?.experience[0].role}
+            </CardDescription>
+            <CardDescription className="text-right">
+              Used to work at {formFields?.experience[0].company}
             </CardDescription>
           </CardFooter>
         </Card>
@@ -83,31 +82,33 @@ export default function DeveloperInformation({
           <CardHeader>
             <CardTitle>Details</CardTitle>
             <CardDescription>
-              Expertise in {formFields?.mainSkill.name}
+              Expertise in {formFields?.languages[0].name}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col justify-center">
-            <CardTitle className="text-lg">Company's Name</CardTitle>
-            <CardDescription>Job Role</CardDescription>
-            {formFields?.projects.map((project, index) => {
+            <CardTitle className="text-lg">
+              {formFields?.experience[0].company}
+            </CardTitle>
+            <CardDescription>{formFields?.experience[0].role}</CardDescription>
+            {formFields?.experience.map((detail, index) => {
               return (
                 <div key={index} className="text-sm">
                   <ul className="list-disc list-inside">
                     <li className="list-item">
                       <span className="font-semibold">Duration:</span>{" "}
-                      {project.duration}
+                      {detail.work.duration}
                     </li>
                     <li className="list-item">
                       <span className="font-semibold">Project Name:</span>{" "}
-                      {project.name}
+                      {detail.work.name}
                     </li>
                     <li className="list-item">
                       <span className="font-semibold">Purpose:</span>{" "}
-                      {project.purpose}
+                      {detail.work.purpose}
                     </li>
                     <li className="list-item">
                       <span className="font-semibold">Techstack:</span>{" "}
-                      {project.techstack}
+                      {detail.work.techstack}
                     </li>
                   </ul>
                 </div>
@@ -123,10 +124,32 @@ export default function DeveloperInformation({
             <CardDescription>About my technical knowledge</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col justify-center">
-            <CardTitle className="text-lg">Programming Language</CardTitle>
-            <CardTitle className="text-lg">Version Controll tools</CardTitle>
-            <CardTitle className="text-lg">Side Skills</CardTitle>
-            <CardTitle className="text-lg">Interest</CardTitle>
+            <CardTitle className="text-lg">
+              Programming Language:{" "}
+              <CardDescription className="font-medium">
+                {formFields?.languages
+                  .map((language) => language.name)
+                  .join(", ")}
+              </CardDescription>
+            </CardTitle>
+            <CardTitle className="text-lg">
+              Version Controll tools:
+              <CardDescription>{formFields?.tools.join(", ")}</CardDescription>
+            </CardTitle>
+            <CardTitle className="text-lg">
+              Side Skills:
+              <CardDescription>
+                {formFields?.languages
+                  .map((language) => language.name)
+                  .join(", ")}
+              </CardDescription>
+            </CardTitle>
+            <CardTitle className="text-lg">
+              Interest:
+              <CardDescription>
+                {formFields?.interests.join(", ")}
+              </CardDescription>
+            </CardTitle>
           </CardContent>
           <CardFooter className="flex-col items-end"></CardFooter>
         </Card>

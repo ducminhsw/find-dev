@@ -5,46 +5,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../ui/form";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { RefObject, useImperativeHandle } from "react";
 import { FormFunction, FormModel, InforFunction } from "./DeveloperModels";
 import { FaceImage } from "@/assets";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const language = z.object({
   name: z.string(),
   level: z.string(),
-});
-
-const experience = z.object({
-  company: z
-    .string()
-    .min(5, {
-      message: "This field must be at least 5 characters",
-    })
-    .max(100, {
-      message: "This field must be below 100 characters",
-    }),
-  years: z
-    .number()
-    .min(5, {
-      message: "This field must be at least 5 characters",
-    })
-    .max(100, {
-      message: "This field must be below 100 characters",
-    }),
-  work: z
-    .string()
-    .min(5, {
-      message: "This field must be at least 5 characters",
-    })
-    .max(100, {
-      message: "This field must be below 100 characters",
-    }),
 });
 
 const project = z.object({
@@ -80,6 +64,34 @@ const project = z.object({
     .max(100, {
       message: "This field must be below 100 characters",
     }),
+});
+
+const experience = z.object({
+  company: z
+    .string()
+    .min(5, {
+      message: "This field must be at least 5 characters",
+    })
+    .max(100, {
+      message: "This field must be below 100 characters",
+    }),
+  role: z
+    .string()
+    .min(5, {
+      message: "This field must be at least 5 characters",
+    })
+    .max(100, {
+      message: "This field must be below 100 characters",
+    }),
+  years: z
+    .number()
+    .min(5, {
+      message: "This field must be at least 5 characters",
+    })
+    .max(100, {
+      message: "This field must be below 100 characters",
+    }),
+  work: project,
 });
 
 export const formSchema = z.object({
@@ -119,33 +131,28 @@ export const formSchema = z.object({
   objective: z.string().max(400, {
     message: "Objective must be less then 400 characters",
   }),
-  mainSkill: language,
-  otherSkills: z.array(language),
+  languages: z.array(language),
+  tools: z.array(z.string()),
+  interests: z.array(z.string()),
   experience: z.array(experience),
   projects: z.array(project),
 });
 
 interface Props {
+  defaultFormValues: FormModel;
   formRef: RefObject<FormFunction>;
   infoRef: RefObject<InforFunction>;
 }
 
-export default function DeveloperFormContent({ formRef, infoRef }: Props) {
+export default function DeveloperFormContent({
+  defaultFormValues,
+  formRef,
+  infoRef,
+}: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     shouldFocusError: true,
-    defaultValues: {
-      email: "ducminhsw721@gmail.com",
-      username: "ducminhsw",
-      firstname: "Minh",
-      lastname: "Nguyen",
-      avatarlink: FaceImage,
-      objective: "",
-      mainSkill: {},
-      otherSkills: [],
-      experience: [],
-      projects: [],
-    },
+    defaultValues: defaultFormValues,
   });
 
   const onSubmitForm = (type: number) => {
@@ -207,9 +214,9 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
             name="firstname"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Firstname</FormLabel>
+                <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter firstname" {...field} />
+                  <Input placeholder="Enter your firstname" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -220,84 +227,59 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
             name="lastname"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Lastname</FormLabel>
+                <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter lastname" {...field} />
+                  <Input placeholder="Enter your lastname" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+        <div className="flex space-x-5">
+          <div className="flex-1 flex">
+            <FormField
+              control={form.control}
+              name="avatarlink"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Avatar</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter lastname" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Avatar className="flex-1 h-[160px] w-full self-center rounded-3xl">
+            <AvatarImage src={FaceImage} className="object-cover" />
+          </Avatar>
+        </div>
         <FormField
           control={form.control}
-          name="avatarlink"
+          name={`objective`}
           render={({ field }) => (
-            <FormItem className="w-2/5">
-              <FormLabel>Avatar</FormLabel>
+            <FormItem className="">
+              <FormLabel>Objectives</FormLabel>
               <FormControl>
-                <Input placeholder="Enter lastname" {...field} />
+                <Textarea placeholder="Type your message here." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="objective"
-          render={({ field }) => (
-            <FormItem className="w-2/5">
-              <FormLabel>Objective</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter lastname" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="mainSkill.name"
-          render={({ field }) => (
-            <FormItem className="w-2/5">
-              <FormLabel>Objective</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter your main skill language"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="mainSkill.level"
-          render={({ field }) => (
-            <FormItem className="w-2/5">
-              <FormLabel>Objective</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your main skill level" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.getValues("otherSkills").map((_, index) => {
+        {form.getValues("languages").map((_, index) => {
           return (
-            <div className="flex">
+            <div className="flex space-x-5">
               <FormField
                 control={form.control}
-                name={`otherSkills.${index}.name`}
+                name={`languages.${index}.name`}
                 render={({ field }) => (
                   <FormItem className="w-2/5">
-                    <FormLabel>Objective</FormLabel>
+                    <FormLabel>Language</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter your main skill level"
-                        {...field}
-                      />
+                      <Input placeholder="Type your message here." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -305,16 +287,28 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
               />
               <FormField
                 control={form.control}
-                name={`otherSkills.${index}.level`}
+                name={`languages.${index}.level`}
                 render={({ field }) => (
-                  <FormItem className="w-2/5">
-                    <FormLabel>Objective</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your main skill level"
-                        {...field}
-                      />
-                    </FormControl>
+                  <FormItem>
+                    <FormLabel>Level</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Your expertise in the language" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Level</SelectLabel>
+                          <SelectItem value="junior">Junior</SelectItem>
+                          <SelectItem value="middle">Middle</SelectItem>
+                          <SelectItem value="senior">Senior</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -324,13 +318,13 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
         })}
         {form.getValues("experience").map((_, index) => {
           return (
-            <div>
+            <div className="flex space-x-3">
               <FormField
                 control={form.control}
                 name={`experience.${index}.company`}
                 render={({ field }) => (
                   <FormItem className="w-2/5">
-                    <FormLabel>Objective</FormLabel>
+                    <FormLabel>Company Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your main skill level"
@@ -346,6 +340,54 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
                 name={`experience.${index}.years`}
                 render={({ field }) => (
                   <FormItem className="w-2/5">
+                    <FormLabel>Years</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your main skill level"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`experience.${index}.work.duration`}
+                render={({ field }) => (
+                  <FormItem className="w-2/5">
+                    <FormLabel>Work duration</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your main skill level"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`experience.${index}.work.name`}
+                render={({ field }) => (
+                  <FormItem className="w-2/5">
+                    <FormLabel>Project description</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your main skill level"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`experience.${index}.work.techstack`}
+                render={({ field }) => (
+                  <FormItem className="w-2/5">
                     <FormLabel>Objective</FormLabel>
                     <FormControl>
                       <Input
@@ -359,7 +401,7 @@ export default function DeveloperFormContent({ formRef, infoRef }: Props) {
               />
               <FormField
                 control={form.control}
-                name={`experience.${index}.work`}
+                name={`experience.${index}.work.purpose`}
                 render={({ field }) => (
                   <FormItem className="w-2/5">
                     <FormLabel>Objective</FormLabel>

@@ -129,7 +129,7 @@ func (app *application) HandlerEngineerRegister() echo.HandlerFunc {
 		}()
 
 		select {
-		case <-ctx.Done():
+		case <-c.Request().Context().Done():
 			log.Println("Into context done")
 			return HandlerResponse(c, http.StatusInternalServerError, nil)
 		case it := <-rsChan:

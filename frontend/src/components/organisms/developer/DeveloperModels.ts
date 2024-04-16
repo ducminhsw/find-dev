@@ -13,14 +13,15 @@ export interface Language {
 
 export interface Experience {
   company: string;
+  role: string;
+  work: Project;
   years: number;
-  work: string;
 }
 
 export interface Project {
+  duration: string;
   name: string;
   techstack: string;
-  duration: string;
   purpose: string;
 }
 
@@ -31,8 +32,9 @@ export interface FormModel {
   lastname: string;
   avatarlink: string;
   objective: string;
-  mainSkill: Language;
-  otherSkills: Language[];
+  languages: Language[];
+  tools: string[];
+  interests: string[];
   experience: Experience[];
   projects: Project[];
 }
